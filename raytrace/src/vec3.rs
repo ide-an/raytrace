@@ -1,8 +1,8 @@
 #[derive(Debug,PartialEq)]
 pub struct Vec3 {
-    x: f64,
-    y: f64,
-    z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 #[allow(dead_code)]
@@ -102,7 +102,9 @@ impl Vec3 {
     }
 }
 
+#[allow(dead_code)]
 pub type Point3 = Vec3;
+#[allow(dead_code)]
 pub type Color = Vec3;
 
 #[cfg(test)]

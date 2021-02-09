@@ -7,7 +7,7 @@ pub struct Ray {
 
 impl Ray {
     pub fn at(&self, t:f64) -> vec3::Point3 {
-        vec3::add(&self.orig, &vec3::mul_scalar(&self.dir, t))
+        self.orig + (self.dir * t)
     }
 }
 

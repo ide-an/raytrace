@@ -1,4 +1,6 @@
-#[derive(Debug,PartialEq,Clone)]
+use std::ops;
+
+#[derive(Debug,PartialEq,Clone,Copy)]
 pub struct Vec3 {
     pub x: f64,
     pub y: f64,
@@ -69,12 +71,18 @@ impl Vec3 {
 
 }
 #[allow(dead_code)]
-pub fn add(a:&Vec3, b:&Vec3) -> Vec3  {
-    Vec3::vec3(a.x+b.x, a.y+b.y, a.z+b.z)
+impl ops::Add<Vec3> for Vec3 {
+    type Output = Vec3;
+    fn add(self, b:Vec3) -> Vec3  {
+        Vec3::vec3(self.x+b.x, self.y+b.y, self.z+b.z)
+    }
 }
 #[allow(dead_code)]
-pub fn sub(a:&Vec3, b:&Vec3) -> Vec3  {
-    Vec3::vec3(a.x-b.x, a.y-b.y, a.z-b.z)
+impl ops::Sub<Vec3> for Vec3 {
+    type Output = Vec3;
+    fn sub(self, b:Vec3) -> Vec3  {
+        Vec3::vec3(self.x-b.x, self.y-b.y, self.z-b.z)
+    }
 }
 #[allow(dead_code)]
 pub fn mul(a:&Vec3, b:&Vec3) -> Vec3  {
@@ -82,13 +90,19 @@ pub fn mul(a:&Vec3, b:&Vec3) -> Vec3  {
 }
 
 #[allow(dead_code)]
-pub fn mul_scalar(a:&Vec3, f:f64) -> Vec3  {
-    Vec3::vec3(a.x*f, a.y*f, a.z*f)
+impl ops::Mul<f64> for Vec3 {
+    type Output = Vec3;
+    fn mul(self, f:f64) -> Vec3  {
+        Vec3::vec3(self.x*f, self.y*f, self.z*f)
+    }
 }
 
 #[allow(dead_code)]
-pub fn div_scalar(a:&Vec3, f:f64) -> Vec3  {
-    mul_scalar(a, 1.0/f)
+impl ops::Div<f64> for Vec3 {
+    type Output = Vec3;
+    fn div(self, f:f64) -> Vec3  {
+        self * (1.0/f)
+    }
 }
 
 #[allow(dead_code)]
@@ -107,7 +121,7 @@ pub fn cross(a:&Vec3, b:&Vec3) -> Vec3  {
 
 #[allow(dead_code)]
 pub fn unit_vector(a:&Vec3) -> Vec3 {
-    div_scalar(a, a.length())
+    *a / a.length()
 }
 
 #[allow(dead_code)]
@@ -141,6 +155,7 @@ mod tests {
 
     #[test]
     fn test_vec3_static() {
+        assert_eq!(Vec3::vec3(1.0, 2.0, 3.0) + Vec3::vec3(1.0, 2.0, 3.0), Vec3::vec3(2.0, 4.0, 6.0));
         assert_eq!(dot(&Vec3::vec3(1.0, 2.0, 3.0), &Vec3::vec3(1.0, 2.0, 3.0)), 14.0);
         assert_eq!(cross(&Vec3::vec3(1.0, 2.0, 3.0), &Vec3::vec3(3.0, 2.0, 1.0)), Vec3::vec3(-4.0, 8.0, -4.0));
     }

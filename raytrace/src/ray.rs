@@ -16,7 +16,7 @@ mod tests {
     use super::*;
     #[test]
     fn test_ray() {
-        let ray = Ray{orig: vec3::Vec3::vec3(1.0, 2.0, 3.0), dir: vec3::Vec3::vec3(1.0, 2.0, 3.0)};
-        assert_eq!(ray.at(0.5), vec3::Vec3::vec3(1.5,3.0,4.5))
+        let ray = Ray{orig: vec3::point3(1.0, 2.0, 3.0), dir: vec3::vec3(1.0, 2.0, 3.0)};
+        assert_eq!(ray.at(0.5), vec3::vec3(1.5,3.0,4.5))
     }
 }

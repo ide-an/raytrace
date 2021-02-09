@@ -7,18 +7,18 @@ pub struct Vec3 {
     pub z: f64,
 }
 
+pub fn vec3(x:f64, y:f64, z:f64) -> Vec3 {
+    Vec3{x: x, y: y, z: z}
+}
+
+pub fn zero() -> Vec3 {
+    vec3(0.0, 0.0, 0.0)
+}
 #[allow(dead_code)]
 impl Vec3 {
-    pub fn vec3(x:f64, y:f64, z:f64) -> Self {
-        Vec3{x: x, y: y, z: z}
-    }
-    
-    pub fn zero() -> Self {
-        Self::vec3(0.0, 0.0, 0.0)
-    }
 
     pub fn minus(&self) -> Self {
-        Self::vec3( - self.x,  - self.y,  - self.z )
+        vec3( - self.x,  - self.y,  - self.z )
     }
 
     pub fn at(&self, i:u8) -> f64{
@@ -74,26 +74,26 @@ impl Vec3 {
 impl ops::Add<Vec3> for Vec3 {
     type Output = Vec3;
     fn add(self, b:Vec3) -> Vec3  {
-        Vec3::vec3(self.x+b.x, self.y+b.y, self.z+b.z)
+        vec3(self.x+b.x, self.y+b.y, self.z+b.z)
     }
 }
 #[allow(dead_code)]
 impl ops::Sub<Vec3> for Vec3 {
     type Output = Vec3;
     fn sub(self, b:Vec3) -> Vec3  {
-        Vec3::vec3(self.x-b.x, self.y-b.y, self.z-b.z)
+        vec3(self.x-b.x, self.y-b.y, self.z-b.z)
     }
 }
 #[allow(dead_code)]
 pub fn mul(a:&Vec3, b:&Vec3) -> Vec3  {
-    Vec3::vec3(a.x*b.x, a.y*b.y, a.z*b.z)
+    vec3(a.x*b.x, a.y*b.y, a.z*b.z)
 }
 
 #[allow(dead_code)]
 impl ops::Mul<f64> for Vec3 {
     type Output = Vec3;
     fn mul(self, f:f64) -> Vec3  {
-        Vec3::vec3(self.x*f, self.y*f, self.z*f)
+        vec3(self.x*f, self.y*f, self.z*f)
     }
 }
 
@@ -112,7 +112,7 @@ pub fn dot(a:&Vec3, b:&Vec3) -> f64  {
 
 #[allow(dead_code)]
 pub fn cross(a:&Vec3, b:&Vec3) -> Vec3  {
-    Vec3::vec3(
+    vec3(
         a.y*b.z - a.z*b.y,
         a.z*b.x - a.x*b.z,
         a.x*b.y - a.y*b.x
@@ -126,8 +126,14 @@ pub fn unit_vector(a:&Vec3) -> Vec3 {
 
 #[allow(dead_code)]
 pub type Point3 = Vec3;
+pub fn point3(x:f64, y:f64, z:f64) -> Point3 {
+    Point3{x: x, y: y, z: z}
+}
 #[allow(dead_code)]
 pub type Color = Vec3;
+pub fn color(r:f64, g:f64, b:f64) -> Color {
+    Color{x: r, y: g, z: b}
+}
 
 #[cfg(test)]
 mod tests {
@@ -136,27 +142,27 @@ mod tests {
     fn test_vec3() {
         let v = Vec3::zero();
         eprint!("v: {:?}\n", v);
-        let mut w = Vec3::vec3(1.0, 2.0, 3.0);
+        let mut w = vec3(1.0, 2.0, 3.0);
         eprint!("w: {:?}\n", w);
         eprint!("w: {:?}\n", w.minus());
         eprint!("w: {:?}\n", w.minus().at(0));
         assert_eq!(w.minus().at(0), -1.0);
         w.at_assign(0, -10.0);
         assert_eq!(w.at(0), -10.0);
-        let mut x = Vec3::vec3(1.0, 2.0, 3.0);
-        x.add_assign(&Vec3::vec3(1.0, 2.0, 3.0));
-        assert_eq!(x, Vec3::vec3(2.0, 4.0, 6.0));
-        let mut y = Vec3::vec3(1.0, 2.0, 3.0);
+        let mut x = vec3(1.0, 2.0, 3.0);
+        x.add_assign(&vec3(1.0, 2.0, 3.0));
+        assert_eq!(x, vec3(2.0, 4.0, 6.0));
+        let mut y = vec3(1.0, 2.0, 3.0);
         y.mul_assign(0.5);
-        assert_eq!(y, Vec3::vec3(0.5, 1.0, 1.5));
-        assert_eq!(Vec3::vec3(4.0, 3.0, 0.0).length(), 5.0);
-        assert_eq!(Vec3::vec3(4.0, 3.0, 0.0).length_squared(), 25.0);
+        assert_eq!(y, vec3(0.5, 1.0, 1.5));
+        assert_eq!(vec3(4.0, 3.0, 0.0).length(), 5.0);
+        assert_eq!(vec3(4.0, 3.0, 0.0).length_squared(), 25.0);
     }
 
     #[test]
     fn test_vec3_static() {
-        assert_eq!(Vec3::vec3(1.0, 2.0, 3.0) + Vec3::vec3(1.0, 2.0, 3.0), Vec3::vec3(2.0, 4.0, 6.0));
-        assert_eq!(dot(&Vec3::vec3(1.0, 2.0, 3.0), &Vec3::vec3(1.0, 2.0, 3.0)), 14.0);
-        assert_eq!(cross(&Vec3::vec3(1.0, 2.0, 3.0), &Vec3::vec3(3.0, 2.0, 1.0)), Vec3::vec3(-4.0, 8.0, -4.0));
+        assert_eq!(vec3(1.0, 2.0, 3.0) + vec3(1.0, 2.0, 3.0), vec3(2.0, 4.0, 6.0));
+        assert_eq!(dot(&vec3(1.0, 2.0, 3.0), &vec3(1.0, 2.0, 3.0)), 14.0);
+        assert_eq!(cross(&vec3(1.0, 2.0, 3.0), &vec3(3.0, 2.0, 1.0)), vec3(-4.0, 8.0, -4.0));
     }
 }

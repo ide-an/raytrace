@@ -1,4 +1,5 @@
 use std::ops;
+use crate::common::{random_double, random_double_range};
 
 #[derive(Debug,PartialEq,Clone,Copy)]
 pub struct Vec3 {
@@ -122,6 +123,21 @@ pub fn cross(a:&Vec3, b:&Vec3) -> Vec3  {
 #[allow(dead_code)]
 pub fn unit_vector(a:&Vec3) -> Vec3 {
     *a / a.length()
+}
+
+pub fn random() -> Vec3 {
+    vec3(random_double(), random_double(), random_double())
+}
+pub fn random_range(low:f64, high:f64) -> Vec3 {
+    vec3(random_double_range(low, high), random_double_range(low, high), random_double_range(low, high))
+}
+pub fn random_in_unit_sphere() -> Vec3 {
+    loop {
+        let p = random_range(-1.0, 1.0);
+        if p.length_squared() < 1.0 {
+            return p
+        }
+    }
 }
 
 #[allow(dead_code)]

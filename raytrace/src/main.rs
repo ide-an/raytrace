@@ -1,6 +1,9 @@
 mod vec3;
 mod color;
 mod ray;
+mod hittable;
+mod sphere;
+use crate::hittable::Hittable;
 
 fn hit_sphere(center:&vec3::Point3, radius:f64, r:&ray::Ray) -> f64 {
     let oc = r.orig - *center;
@@ -15,9 +18,13 @@ fn hit_sphere(center:&vec3::Point3, radius:f64, r:&ray::Ray) -> f64 {
     }
 }
 fn ray_color(r:&ray::Ray) -> vec3::Color {
-    let t = hit_sphere(&vec3::point3(0.0, 0.0, -1.0), 0.5, &r);
-    if t > 0.0 {
-        let N = vec3::unit_vector(&(r.at(t) - vec3::point3(0.0, 0.0, -1.0)));
+    let mut hit_rec = hittable::hit_record();
+    let a_sphere = sphere::Sphere{center: vec3::point3(0.0, 0.0, -1.0), radius: 0.5};
+    let is_hit = a_sphere.hit(&r, 0.0, 2.0, &mut hit_rec);
+    //let t = hit_sphere(&vec3::point3(0.0, 0.0, -1.0), 0.5, &r);
+    if is_hit {
+        //let N = vec3::unit_vector(&(r.at(t) - vec3::point3(0.0, 0.0, -1.0)));
+        let N = hit_rec.normal;
         return vec3::color(N.x+1.0, N.y+1.0, N.z+1.0) * 0.5;
     }
     let unit_direction = vec3::unit_vector(&r.dir);

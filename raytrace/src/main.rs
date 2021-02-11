@@ -6,9 +6,11 @@ mod sphere;
 mod hittable_list;
 mod common;
 mod camera;
+mod material;
 use crate::camera::Camera;
 use crate::hittable::Hittable;
 use crate::common::*;
+use std::rc::Rc;
 
 fn ray_color(r:&ray::Ray, world: &dyn hittable::Hittable, depth:i32) -> vec3::Color {
     if depth <= 0 {
@@ -17,8 +19,14 @@ fn ray_color(r:&ray::Ray, world: &dyn hittable::Hittable, depth:i32) -> vec3::Co
     }
     let mut hit_rec = hittable::hit_record();
     if world.hit(&r, 0.001, common::INFINITY, &mut hit_rec) {
-        let target = &(&hit_rec.p + &hit_rec.normal) + &vec3::random_unit_vector();
-        return &ray_color(&ray::Ray{orig:hit_rec.p, dir:&target - &hit_rec.p}, world, depth - 1) * 0.5;
+        let mut scattered = ray::Ray{ orig: vec3::zero(), dir: vec3::zero()};
+        let mut attenuation = vec3::color(0.0, 0.0, 0.0);
+        if hit_rec.mat_ptr.scatter(&r, &hit_rec, &mut attenuation, &mut scattered) {
+            return vec3::mul(&ray_color(&scattered, world, depth - 1), &attenuation)
+        }
+        return vec3::color(0.0, 0.0, 0.0);
+        //let target = &(&hit_rec.p + &hit_rec.normal) + &vec3::random_unit_vector();
+        //return &ray_color(&ray::Ray{orig:hit_rec.p, dir:&target - &hit_rec.p}, world, depth - 1) * 0.5;
     }
         //eprint!("depth: {}\n", depth);
     let unit_direction = vec3::unit_vector(&r.dir);
@@ -36,8 +44,8 @@ fn main() {
 
     // World
     let mut world = hittable_list::HittableList{ objects: Vec::new() };
-    world.add(Box::new(sphere::Sphere{center: vec3::point3(0.0, 0.0, -1.0), radius: 0.5}));
-    world.add(Box::new(sphere::Sphere{center: vec3::point3(0.0, -100.5, -1.0), radius: 100.0}));
+    world.add(Box::new(sphere::Sphere{center: vec3::point3(0.0, 0.0, -1.0), radius: 0.5, mat_ptr: Rc::new(material::Lambertian{albedo: vec3::color(0.7, 0.3, 0.3)})}));
+    world.add(Box::new(sphere::Sphere{center: vec3::point3(0.0, -100.5, -1.0), radius: 100.0, mat_ptr: Rc::new(material::Lambertian{albedo: vec3::color(0.8, 0.8, 0.0)})}));
 
     // Camera
     let camera = Camera::camera();

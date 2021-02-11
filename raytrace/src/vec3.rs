@@ -69,6 +69,11 @@ impl Vec3 {
     pub fn tostr(&self) -> String {
         format!("{} {} {}", self.x, self.y, self.z)
     }
+    
+    pub fn near_zero(&self) -> bool {
+        let s = 1e-8;
+        return (self.x < s) && (self.y < s) && (self.z < s);
+    }
 
 }
 #[allow(dead_code)]

@@ -12,13 +12,15 @@ use crate::common::*;
 
 fn ray_color(r:&ray::Ray, world: &dyn hittable::Hittable, depth:i32) -> vec3::Color {
     if depth <= 0 {
+        //eprint!("depth: {}\n", depth);
         return vec3::color(0.0, 0.0, 0.0);
     }
     let mut hit_rec = hittable::hit_record();
-    if world.hit(&r, 0.0, common::INFINITY, &mut hit_rec) {
+    if world.hit(&r, 0.001, common::INFINITY, &mut hit_rec) {
         let target = &(&hit_rec.p + &hit_rec.normal) + &vec3::random_in_unit_sphere();
         return &ray_color(&ray::Ray{orig:hit_rec.p, dir:&target - &hit_rec.p}, world, depth - 1) * 0.5;
     }
+        //eprint!("depth: {}\n", depth);
     let unit_direction = vec3::unit_vector(&r.dir);
     let t = 0.5 * (unit_direction.y + 1.0);
     &(&vec3::color(1.0, 1.0, 1.0) * (1.0 - t)) + &(&vec3::color(0.5, 0.7, 1.0) * t)

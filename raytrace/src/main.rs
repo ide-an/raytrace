@@ -47,8 +47,8 @@ fn main() {
     let mut world = hittable_list::HittableList{ objects: Vec::new() };
     let material_ground = Rc::new(material::Lambertian{albedo: vec3::color(0.8, 0.8, 0.0)});
     let material_center = Rc::new(material::Lambertian{albedo: vec3::color(0.7, 0.3, 0.3)});
-    let material_left = Rc::new(material::Metal{albedo: vec3::color(0.8, 0.8, 0.8)});
-    let material_right = Rc::new(material::Metal{albedo: vec3::color(0.8, 0.6, 0.2)});
+    let material_left = Rc::new(material::Metal{albedo: vec3::color(0.8, 0.8, 0.8), fuzz: 0.3});
+    let material_right = Rc::new(material::Metal{albedo: vec3::color(0.8, 0.6, 0.2), fuzz: 1.0});
 
     world.add(Box::new(sphere::Sphere{center: vec3::point3( 0.0,-100.5, -1.0), radius: 100.0, mat_ptr: material_ground}));
     world.add(Box::new(sphere::Sphere{center: vec3::point3( 0.0,   0.0, -1.0), radius:   0.5, mat_ptr: material_center}));

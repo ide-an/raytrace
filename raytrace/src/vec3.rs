@@ -140,7 +140,7 @@ mod tests {
     use super::*;
     #[test]
     fn test_vec3() {
-        let v = Vec3::zero();
+        let v = zero();
         eprint!("v: {:?}\n", v);
         let mut w = vec3(1.0, 2.0, 3.0);
         eprint!("w: {:?}\n", w);

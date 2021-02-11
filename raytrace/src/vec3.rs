@@ -139,6 +139,9 @@ pub fn random_in_unit_sphere() -> Vec3 {
         }
     }
 }
+pub fn random_unit_vector() -> Vec3 {
+    unit_vector(&random_in_unit_sphere())
+}
 
 #[allow(dead_code)]
 pub type Point3 = Vec3;

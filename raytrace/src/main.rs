@@ -17,7 +17,7 @@ fn ray_color(r:&ray::Ray, world: &dyn hittable::Hittable, depth:i32) -> vec3::Co
     }
     let mut hit_rec = hittable::hit_record();
     if world.hit(&r, 0.001, common::INFINITY, &mut hit_rec) {
-        let target = &(&hit_rec.p + &hit_rec.normal) + &vec3::random_in_unit_sphere();
+        let target = &(&hit_rec.p + &hit_rec.normal) + &vec3::random_unit_vector();
         return &ray_color(&ray::Ray{orig:hit_rec.p, dir:&target - &hit_rec.p}, world, depth - 1) * 0.5;
     }
         //eprint!("depth: {}\n", depth);

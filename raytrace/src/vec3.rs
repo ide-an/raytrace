@@ -148,6 +148,10 @@ pub fn random_unit_vector() -> Vec3 {
     unit_vector(&random_in_unit_sphere())
 }
 
+pub fn reflect(v:&Vec3, n:&Vec3) -> Vec3 {
+    v - &(&(n * dot(&v, &n)) * 2.0)
+}
+
 #[allow(dead_code)]
 pub type Point3 = Vec3;
 pub fn point3(x:f64, y:f64, z:f64) -> Point3 {

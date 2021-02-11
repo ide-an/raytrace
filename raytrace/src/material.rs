@@ -30,3 +30,16 @@ impl Material for Null {
         return false
     }
 }
+
+pub struct Metal {
+    pub albedo: Color,
+}
+
+impl Material for Metal {
+    fn scatter(&self, r_in:&Ray, rec: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool {
+        let reflected = vec3::reflect(&vec3::unit_vector(&r_in.dir), &rec.normal);
+        *scattered = Ray{ orig: rec.p, dir: reflected };
+        *attenuation = self.albedo;
+        return vec3::dot(&scattered.dir, &rec.normal) > 0.0;
+    }
+}

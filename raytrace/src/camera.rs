@@ -18,7 +18,7 @@ impl Camera {
         let origin = point3(0.0, 0.0, 0.0);
         let horizontal = vec3(viewport_width, 0.0, 0.0);
         let vertical = vec3(0.0, viewport_heiht, 0.0);
-        let lower_left_corner = origin - (horizontal / 2.0) - (vertical / 2.0) - vec3(0.0, 0.0, focal_length);
+        let lower_left_corner = &(&(&origin - &(&horizontal / 2.0)) - &(&vertical / 2.0)) - &vec3(0.0, 0.0, focal_length);
         return Camera{
             origin: origin,
             lower_left_corner: lower_left_corner,
@@ -29,7 +29,7 @@ impl Camera {
     pub fn get_ray(&self, u:f64, v:f64) -> Ray {
         return Ray{
             orig: self.origin,
-            dir: self.lower_left_corner + (self.horizontal * u) + (self.vertical * v) - self.origin,
+            dir: &(&(&self.lower_left_corner + &(&self.horizontal * u)) + &(&self.vertical * v)) - &self.origin,
         }
     }
 }

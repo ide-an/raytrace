@@ -16,12 +16,12 @@ fn ray_color(r:&ray::Ray, world: &dyn hittable::Hittable, depth:i32) -> vec3::Co
     }
     let mut hit_rec = hittable::hit_record();
     if world.hit(&r, 0.0, common::INFINITY, &mut hit_rec) {
-        let target = hit_rec.p + hit_rec.normal + vec3::random_in_unit_sphere();
-        return ray_color(&ray::Ray{orig:hit_rec.p, dir:target - hit_rec.p}, world, depth - 1) * 0.5;
+        let target = &(&hit_rec.p + &hit_rec.normal) + &vec3::random_in_unit_sphere();
+        return &ray_color(&ray::Ray{orig:hit_rec.p, dir:&target - &hit_rec.p}, world, depth - 1) * 0.5;
     }
     let unit_direction = vec3::unit_vector(&r.dir);
     let t = 0.5 * (unit_direction.y + 1.0);
-    (vec3::color(1.0, 1.0, 1.0) * (1.0 - t)) + (vec3::color(0.5, 0.7, 1.0) * t)
+    &(&vec3::color(1.0, 1.0, 1.0) * (1.0 - t)) + &(&vec3::color(0.5, 0.7, 1.0) * t)
 }
 
 fn main() {
@@ -51,7 +51,7 @@ fn main() {
                 let u = (i as f64 + random_double()) / (image_width - 1) as f64;
                 let v = (j as f64 + random_double()) / (image_height - 1) as f64;
                 let r = camera.get_ray(u, v);
-                pixel_color = pixel_color + ray_color(&r, &world, max_depth);
+                pixel_color = &pixel_color + &ray_color(&r, &world, max_depth);
             }
             color::write_color(&pixel_color, sample_per_pixel);
         }

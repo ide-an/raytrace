@@ -72,16 +72,16 @@ impl Vec3 {
 
 }
 #[allow(dead_code)]
-impl ops::Add<Vec3> for Vec3 {
+impl<'a1,'a2> ops::Add<&'a2 Vec3> for &'a1 Vec3 {
     type Output = Vec3;
-    fn add(self, b:Vec3) -> Vec3  {
+    fn add(self, b:&'a2 Vec3) -> Vec3  {
         vec3(self.x+b.x, self.y+b.y, self.z+b.z)
     }
 }
 #[allow(dead_code)]
-impl ops::Sub<Vec3> for Vec3 {
+impl<'a1,'a2> ops::Sub<&'a2 Vec3> for &'a1 Vec3 {
     type Output = Vec3;
-    fn sub(self, b:Vec3) -> Vec3  {
+    fn sub(self, b:&'a2 Vec3) -> Vec3  {
         vec3(self.x-b.x, self.y-b.y, self.z-b.z)
     }
 }
@@ -91,7 +91,7 @@ pub fn mul(a:&Vec3, b:&Vec3) -> Vec3  {
 }
 
 #[allow(dead_code)]
-impl ops::Mul<f64> for Vec3 {
+impl ops::Mul<f64> for &Vec3 {
     type Output = Vec3;
     fn mul(self, f:f64) -> Vec3  {
         vec3(self.x*f, self.y*f, self.z*f)
@@ -99,7 +99,7 @@ impl ops::Mul<f64> for Vec3 {
 }
 
 #[allow(dead_code)]
-impl ops::Div<f64> for Vec3 {
+impl ops::Div<f64> for &Vec3 {
     type Output = Vec3;
     fn div(self, f:f64) -> Vec3  {
         self * (1.0/f)
@@ -122,7 +122,7 @@ pub fn cross(a:&Vec3, b:&Vec3) -> Vec3  {
 
 #[allow(dead_code)]
 pub fn unit_vector(a:&Vec3) -> Vec3 {
-    *a / a.length()
+    a / a.length()
 }
 
 pub fn random() -> Vec3 {
@@ -177,7 +177,7 @@ mod tests {
 
     #[test]
     fn test_vec3_static() {
-        assert_eq!(vec3(1.0, 2.0, 3.0) + vec3(1.0, 2.0, 3.0), vec3(2.0, 4.0, 6.0));
+        assert_eq!(&vec3(1.0, 2.0, 3.0) + &vec3(1.0, 2.0, 3.0), vec3(2.0, 4.0, 6.0));
         assert_eq!(dot(&vec3(1.0, 2.0, 3.0), &vec3(1.0, 2.0, 3.0)), 14.0);
         assert_eq!(cross(&vec3(1.0, 2.0, 3.0), &vec3(3.0, 2.0, 1.0)), vec3(-4.0, 8.0, -4.0));
     }

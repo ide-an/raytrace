@@ -9,7 +9,7 @@ pub struct Sphere {
 
 impl hittable::Hittable for Sphere {
     fn hit(&self, r:&ray::Ray,  t_min:f64, t_max:f64, rec:&mut hittable::HitRecord) -> bool {
-        let oc = r.orig - self.center;
+        let oc = &r.orig - &self.center;
         let a = r.dir.length_squared();
         let half_b = vec3::dot(&r.dir, &oc);
         let c = oc.length_squared() - self.radius*self.radius;
@@ -31,7 +31,7 @@ impl hittable::Hittable for Sphere {
 
         rec.t = root;
         rec.p = r.at(rec.t);
-        let outward_normal = (rec.p - self.center) / self.radius;
+        let outward_normal = &(&rec.p - &self.center) / self.radius;
         rec.set_face_normal(r, &outward_normal);
 
         return true

@@ -1,7 +1,6 @@
 use crate::hittable;
 use crate::vec3;
 use crate::ray;
-use crate::hittable::Hittable;
 
 pub struct Sphere {
     pub center: vec3::Point3,
@@ -43,6 +42,7 @@ impl hittable::Hittable for Sphere {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::hittable::Hittable;
     #[test]
     fn test_hit() {
         let x = Sphere{center: vec3::point3(0.0, 0.0, -1.0), radius: 0.5};

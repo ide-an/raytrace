@@ -3,29 +3,14 @@ mod color;
 mod ray;
 mod hittable;
 mod sphere;
+mod hittable_list;
+mod common;
 use crate::hittable::Hittable;
 
-fn hit_sphere(center:&vec3::Point3, radius:f64, r:&ray::Ray) -> f64 {
-    let oc = r.orig - *center;
-    let a = r.dir.length_squared();
-    let half_b = vec3::dot(&r.dir, &oc);
-    let c = oc.length_squared() - radius*radius;
-    let discriminant = half_b*half_b - a*c;
-    if discriminant < 0.0 {
-        return -1.0
-    } else {
-        return (- half_b - discriminant.sqrt()) / a;
-    }
-}
-fn ray_color(r:&ray::Ray) -> vec3::Color {
+fn ray_color(r:&ray::Ray, world: &dyn hittable::Hittable) -> vec3::Color {
     let mut hit_rec = hittable::hit_record();
-    let a_sphere = sphere::Sphere{center: vec3::point3(0.0, 0.0, -1.0), radius: 0.5};
-    let is_hit = a_sphere.hit(&r, 0.0, 2.0, &mut hit_rec);
-    //let t = hit_sphere(&vec3::point3(0.0, 0.0, -1.0), 0.5, &r);
-    if is_hit {
-        //let N = vec3::unit_vector(&(r.at(t) - vec3::point3(0.0, 0.0, -1.0)));
-        let N = hit_rec.normal;
-        return vec3::color(N.x+1.0, N.y+1.0, N.z+1.0) * 0.5;
+    if world.hit(&r, 0.0, common::INFINITY, &mut hit_rec) {
+        return (hit_rec.normal + vec3::color(1.0, 1.0, 1.0)) * 0.5;
     }
     let unit_direction = vec3::unit_vector(&r.dir);
     let t = 0.5 * (unit_direction.y + 1.0);
@@ -37,6 +22,11 @@ fn main() {
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 400;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
+
+    // World
+    let mut world = hittable_list::HittableList{ objects: Vec::new() };
+    world.add(Box::new(sphere::Sphere{center: vec3::point3(0.0, 0.0, -1.0), radius: 0.5}));
+    world.add(Box::new(sphere::Sphere{center: vec3::point3(0.0, -100.5, -1.0), radius: 100.0}));
 
     // Camera
     let viewport_heiht = 2.0;
@@ -61,7 +51,7 @@ fn main() {
                 orig: origin,
                 dir: lower_left_corner + (horizontal * u) + (vertical * v) - origin,
             };
-            let pixel_color = ray_color(&r);
+            let pixel_color = ray_color(&r, &world);
             color::write_color(&pixel_color);
         }
     }

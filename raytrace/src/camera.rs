@@ -1,4 +1,4 @@
-use crate::vec3::{Point3, Vec3, vec3, point3};
+use crate::vec3::{Point3, Vec3, vec3, point3,unit_vector,cross};
 use crate::ray::Ray;
 use crate::common::degrees_to_radians;
 
@@ -12,6 +12,9 @@ pub struct Camera {
 
 impl Camera {
     pub fn camera(
+        lookfrom: Point3,
+        lookat: Point3,
+        vup: Vec3,
         vfov: f64,
         aspect_ratio: f64
         ) -> Camera {
@@ -20,12 +23,14 @@ impl Camera {
         let viewport_heiht = 2.0 * h;
         let viewport_width = aspect_ratio * viewport_heiht;
 
-        let focal_length = 1.0;
+        let w = unit_vector(&(&lookfrom - &lookat));
+        let u = unit_vector(&cross(&vup, &w));
+        let v = cross(&w, &u);
 
-        let origin = point3(0.0, 0.0, 0.0);
-        let horizontal = vec3(viewport_width, 0.0, 0.0);
-        let vertical = vec3(0.0, viewport_heiht, 0.0);
-        let lower_left_corner = &(&(&origin - &(&horizontal / 2.0)) - &(&vertical / 2.0)) - &vec3(0.0, 0.0, focal_length);
+        let origin = lookfrom;
+        let horizontal = &u * viewport_width;
+        let vertical = &v * viewport_heiht;
+        let lower_left_corner = &(&(&origin - &(&horizontal / 2.0)) - &(&vertical / 2.0)) - &w;
         return Camera{
             origin: origin,
             lower_left_corner: lower_left_corner,
@@ -33,10 +38,10 @@ impl Camera {
             vertical:vertical
         }
     }
-    pub fn get_ray(&self, u:f64, v:f64) -> Ray {
+    pub fn get_ray(&self, s:f64, t:f64) -> Ray {
         return Ray{
             orig: self.origin,
-            dir: &(&(&self.lower_left_corner + &(&self.horizontal * u)) + &(&self.vertical * v)) - &self.origin,
+            dir: &(&(&self.lower_left_corner + &(&self.horizontal * s)) + &(&self.vertical * t)) - &self.origin,
         }
     }
 }

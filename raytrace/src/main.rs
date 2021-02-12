@@ -11,6 +11,7 @@ use crate::camera::Camera;
 use crate::hittable::Hittable;
 use crate::common::*;
 use std::rc::Rc;
+use crate::vec3::point3;
 
 fn ray_color(r:&ray::Ray, world: &dyn hittable::Hittable, depth:i32) -> vec3::Color {
     if depth <= 0 {
@@ -44,6 +45,7 @@ fn main() {
     let max_depth = 50;
 
     // World
+    /*
     let R = (PI/4.0).cos();
     let mut world = hittable_list::HittableList{ objects: Vec::new() };
 
@@ -53,7 +55,7 @@ fn main() {
 
     world.add(Box::new(sphere::Sphere{center: vec3::point3(-R,   0.0, -1.0), radius:   R, mat_ptr: material_left}));
     world.add(Box::new(sphere::Sphere{center: vec3::point3( R,   0.0, -1.0), radius:   R, mat_ptr: material_right}));
-    /*
+    */
     let mut world = hittable_list::HittableList{ objects: Vec::new() };
     let material_ground = Rc::new(material::Lambertian{albedo: vec3::color(0.8, 0.8, 0.0)});
     //let material_center = Rc::new(material::Dielectric{ir: 1.5});
@@ -68,10 +70,9 @@ fn main() {
     world.add(Box::new(sphere::Sphere{center: vec3::point3(-1.0,   0.0, -1.0), radius:   0.5, mat_ptr: material_left.clone()}));
     world.add(Box::new(sphere::Sphere{center: vec3::point3(-1.0,   0.0, -1.0), radius:   -0.4, mat_ptr: material_left.clone()}));
     world.add(Box::new(sphere::Sphere{center: vec3::point3( 1.0,   0.0, -1.0), radius:   0.5, mat_ptr: material_right}));
-    */
 
     // Camera
-    let camera = Camera::camera(90.0, aspect_ratio);
+    let camera = Camera::camera(point3(-2.0,2.0,1.0), point3(0.0,0.0,-1.0), vec3::vec3(0.0,1.0,0.0), 20.0, aspect_ratio);
 
     // Render
     println!("P3\n{} {}\n255", image_width, image_height);

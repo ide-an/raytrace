@@ -147,6 +147,14 @@ pub fn random_in_unit_sphere() -> Vec3 {
 pub fn random_unit_vector() -> Vec3 {
     unit_vector(&random_in_unit_sphere())
 }
+pub fn random_in_unit_disk() -> Vec3 {
+    loop {
+        let p = vec3(random_double_range(-1.0, 1.0), random_double_range(-1.0, 1.0), 0.0);
+        if p.length_squared() < 1.0 {
+            return p
+        }
+    }
+}
 
 pub fn reflect(v:&Vec3, n:&Vec3) -> Vec3 {
     v - &(&(n * dot(&v, &n)) * 2.0)

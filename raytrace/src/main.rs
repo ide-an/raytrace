@@ -72,7 +72,12 @@ fn main() {
     world.add(Box::new(sphere::Sphere{center: vec3::point3( 1.0,   0.0, -1.0), radius:   0.5, mat_ptr: material_right}));
 
     // Camera
-    let camera = Camera::camera(point3(-2.0,2.0,1.0), point3(0.0,0.0,-1.0), vec3::vec3(0.0,1.0,0.0), 20.0, aspect_ratio);
+    let lookfrom = point3(3.0,3.0,2.0);
+    let lookat = point3(0.0,0.0,-1.0);
+    let vup = vec3::vec3(0.0,1.0,0.0);
+    let dist_to_focus = (&lookfrom - &lookat).length();
+    let aperture = 0.5;
+    let camera = Camera::camera(lookfrom, lookat, vup, 20.0, aspect_ratio, aperture, dist_to_focus);
 
     // Render
     println!("P3\n{} {}\n255", image_width, image_height);

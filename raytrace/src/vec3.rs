@@ -152,6 +152,14 @@ pub fn reflect(v:&Vec3, n:&Vec3) -> Vec3 {
     v - &(&(n * dot(&v, &n)) * 2.0)
 }
 
+pub fn refract(uv: &Vec3, n: &Vec3, etai_over_etat: f64) -> Vec3 {
+    let uvdot = dot(&(uv * -1.0), n);
+    let cos_theta = if uvdot < 1.0 { uvdot } else { 1.0 };
+    let r_out_perp = &(uv + &(n * cos_theta)) * etai_over_etat;
+    let r_out_parallel = &(n * (1.0 - r_out_perp.length_squared()).abs().sqrt()) * -1.0;
+    return &r_out_perp + &r_out_parallel;
+}
+
 #[allow(dead_code)]
 pub type Point3 = Vec3;
 pub fn point3(x:f64, y:f64, z:f64) -> Point3 {

@@ -44,6 +44,16 @@ fn main() {
     let max_depth = 50;
 
     // World
+    let R = (PI/4.0).cos();
+    let mut world = hittable_list::HittableList{ objects: Vec::new() };
+
+
+    let material_left = Rc::new(material::Lambertian{albedo: vec3::color(0.0, 0.0, 1.0)});
+    let material_right = Rc::new(material::Lambertian{albedo: vec3::color(1.0, 0.0, 0.0)});
+
+    world.add(Box::new(sphere::Sphere{center: vec3::point3(-R,   0.0, -1.0), radius:   R, mat_ptr: material_left}));
+    world.add(Box::new(sphere::Sphere{center: vec3::point3( R,   0.0, -1.0), radius:   R, mat_ptr: material_right}));
+    /*
     let mut world = hittable_list::HittableList{ objects: Vec::new() };
     let material_ground = Rc::new(material::Lambertian{albedo: vec3::color(0.8, 0.8, 0.0)});
     //let material_center = Rc::new(material::Dielectric{ir: 1.5});
@@ -58,9 +68,10 @@ fn main() {
     world.add(Box::new(sphere::Sphere{center: vec3::point3(-1.0,   0.0, -1.0), radius:   0.5, mat_ptr: material_left.clone()}));
     world.add(Box::new(sphere::Sphere{center: vec3::point3(-1.0,   0.0, -1.0), radius:   -0.4, mat_ptr: material_left.clone()}));
     world.add(Box::new(sphere::Sphere{center: vec3::point3( 1.0,   0.0, -1.0), radius:   0.5, mat_ptr: material_right}));
+    */
 
     // Camera
-    let camera = Camera::camera();
+    let camera = Camera::camera(90.0, aspect_ratio);
 
     // Render
     println!("P3\n{} {}\n255", image_width, image_height);
